@@ -1,0 +1,36 @@
+[Unit]
+Description=Unbound DNS Resolver
+Documentation=https://unbound.docs.nlnetlabs.com/
+After=network.target network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=unbound
+Group=unbound
+ExecStartPre=/opt/unbound/sbin/unbound-checkconf /opt/unbound/etc/unbound/unbound.conf
+ExecStart=/opt/unbound/sbin/unbound -d
+ExecReload=/opt/unbound/sbin/unbound-control reload
+ExecStop=/opt/unbound/sbin/unbound-control stop
+PIDFile=/opt/unbound/etc/unbound/run/unbound.pid
+TimeoutStartSec=30
+Restart=on-failure
+RestartSec=5
+
+# Security hardening
+NoNewPrivileges=yes
+ProtectSystem=strict
+ProtectHome=yes
+PrivateTmp=yes
+PrivateDevices=yes
+ProtectKernelTunables=yes
+ProtectKernelModules=yes
+ProtectControlGroups=yes
+RestrictAddressFamilies=AF_INET AF_INET6 AF_UNIX
+RestrictNamespaces=yes
+LockPersonality=yes
+MemoryDenyWriteExecute=yes
+ReadWritePaths=/opt/unbound/etc/unbound /var/log/unbound
+
+[Install]
+WantedBy=multi-user.target

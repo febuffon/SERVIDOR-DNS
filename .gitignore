@@ -1,0 +1,6 @@
+.env
+unbound/root.key
+unbound/root.hints
+unbound/cache/
+unbound/tls/
+*.log
